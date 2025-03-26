@@ -1,3 +1,4 @@
+%% RADERA
 clear; clc; close all;
 
 %% Parametrar för vattenkranproblemet
