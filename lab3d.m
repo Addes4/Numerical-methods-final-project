@@ -39,16 +39,29 @@ for iter = 1:max_iter
         break;
     end
     
-    % Beräkna Jacobianen med finita differenser
-    J = zeros(2,2);
+    % räkna jacobianen m finita differenser
+    J = zeros(2,2); % tom matris för jacobian
     for i = 1:2
-        dp = zeros(2,1);
-        dp(i) = eps_fd;
-        p_plus = p + dp;
+        dp = zeros(2,1); % Skapar en nollvektor med samma dimension som p.
+        dp(i) = eps_fd;   % Sätter en liten perturbation (eps_fd) i den i:te komponenten.
+        p_plus = p + dp;   % Skapar en ny parametervektor med en liten förändring i den i:te komponenten.
+
+        % Löser ODE-systemet med den perturberade parametervektorn p_plus
         [~, y_vals_p, v_vals_p] = fdm_solver(p_plus, y0_val, xspan(2), N, K1);
+
+        % Beräknar residualerna för den perturberade lösningen:
+        % R1_p är skillnaden mellan sluttlutningen vid x=x_end och önskad sluttlutning.
         R1_p = v_vals_p(end) - desired_slope;
+        
+        % R2_p är skillnaden mellan den beräknade maxhöjden och den önskade maxhöjden.
         R2_p = max(y_vals_p) - desired_max;
-        F_val_p = [R1_p; R2_p];
+
+        % Samlar de perturberade residualerna i en vektor.
+        F_val_p = [R1_p; R2_p]; 
+        
+        % Finita differens-approximation: skillnaden (F(p+dp)-F(p)) dividerat med eps_fd 
+        % ger en approximation av den partiella derivatan av F med avseende på p(i).
+        % Resultatet lagras i kolumn i i Jacobianen J.
         J(:, i) = (F_val_p - F_val) / eps_fd;
     end
     
@@ -93,11 +106,9 @@ function [x_vals, y_vals, v_vals] = fdm_solver(p, y0, x_end, N, K1)
 end
 
 % Utskrift av resultat
-disp(['Konvergerat K0 = ', num2str(K0_new, '%.7f')]);
 disp(['s = ', num2str(s_new, '%.7f')]);
-disp(['Vid x = 0.5 blir y'' = ', num2str(final_slope, '%.8f')]);
-disp(['Maxhöjd = ', num2str(max_y, '%.6f')]);
 disp(['Antal Newton-iterationer: ', num2str(iter)]);
+disp(['Konvergerat K0 = ', num2str(K0_new, '%.7f')]);
 disp(['Konvergerad startlutning: ', num2str(rad2deg(s_new))]);
 
 % Plottning av kranens profil (sett från sidan)
