@@ -1,9 +1,9 @@
 clear; clc; close all;
 
-% Parametrar och önskade villkor PARAMETRAR OCH ÖNSKADE VILLKOR
-K1 = 0.2;                   % K1 ges, K(x) = K0 - K1*x
-desired_slope = -0.51;      % Önskad sluttlutning vid x = 0.5
-desired_max   = 0.255;      % Önskad maximal höjd
+% parametrar/villkor
+K1 = 0.2;                   % K(x) = K0 - K1*x
+desired_slope = -0.51;      % sluttlutning vid x = 0.5
+desired_max   = 0.255;      % maximal höjd
 
 y0_val = 0.1;               % Randvillkor: y(0)=0.1
 % Startlutningen anges initialt som s = y'(0). Vi gissar med
@@ -18,10 +18,10 @@ N = 1000000;                    % Antal steg i FDM (kan justeras för noggrannhe
 h = (xspan(2)-xspan(1)) / N;
 
 tol_newton = 1e-8;          % Tolerans för Newtons metod
-max_iter = 50;              % Max antal Newton-iterationer
-eps_fd = 1e-6;              % Finita differenssteget för Jacobianen
+max_iter = 50;              % Max antal iterationer
+eps_fd = 1e-6;              % Finita differenssteget för jacobianen
 
-% Newtons metod med finita differenser (FDM)
+% finita differens metoden
 for iter = 1:max_iter
     % Lös IVP med FDM för nuvarande parametrar p = [K0; s]
     [x_vals, y_vals, v_vals] = fdm_solver(p, y0_val, xspan(2), N, K1);
@@ -70,7 +70,7 @@ for iter = 1:max_iter
     p = p + delta;
 end
 
-% Extrahera de justerade parametrarna
+% Extrahera justerade parametrarna
 K0_new = p(1);
 s_new  = p(2);
 
@@ -105,16 +105,16 @@ function [x_vals, y_vals, v_vals] = fdm_solver(p, y0, x_end, N, K1)
     end
 end
 
-% Utskrift av resultat
+% print svar
 disp(['s = ', num2str(s_new, '%.7f')]);
-disp(['Antal Newton-iterationer: ', num2str(iter)]);
+disp(['Antal iterationer: ', num2str(iter)]);
 disp(['Konvergerat K0 = ', num2str(K0_new, '%.7f')]);
 disp(['Konvergerad startlutning: ', num2str(rad2deg(s_new))]);
 
-% Plottning av kranens profil (sett från sidan)
+% plot kranen
 figure;
-plot(x_vals, y_vals, 'b-', 'LineWidth',2);
-xlabel('x [m]');
-ylabel('y [m]');
-title('Kranens profil (FDM)');
+plot(x_vals, y_vals, 'LineWidth',2);
+xlabel('x');
+ylabel('y');
+title('Kranens form');
 grid on;
