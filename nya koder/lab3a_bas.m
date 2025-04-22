@@ -25,7 +25,6 @@ yh2 = Yh2(1,end);
 err_method = abs(yh2 - yh);
 
 % funktioner
-
 function dYdx = crane_ode(x, Y, K0, K1)
     % ODE-system för vattenkran: Y = [y; y']
     y = Y(1);
