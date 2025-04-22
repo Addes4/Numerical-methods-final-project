@@ -1,9 +1,9 @@
-# 🚰 Vattenkran – Final Project in Numerical Methods
+# Numerical Methods Final Project
+# Vattenkranen
 
 <p align="center">
   <b>Numeriska metoder, grundkurs – SF1546</b><br>
   KTH Royal Institute of Technology<br>
-  Spring Term 2025
 </p>
 
 ---
