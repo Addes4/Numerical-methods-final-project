@@ -1,6 +1,6 @@
 
 <h1 align="center">Numerical Methods Final Project</h1>
-<h2 align="center">Vattenkran</h2>
+<h2 align="center">Vattenkranen</h2>
 
 <p align="center">
   <b>SF1546 – Numeriska metoder, grundkurs</b><br>
@@ -11,7 +11,7 @@
 
 <h3 align="center">Overview</h3>
 
-**Vattenkran** is the final project in the course **Numeriska metoder, grundkurs (SF1546)** at KTH.  
+**Vattenkranen** is the final project in the course **Numeriska metoder, grundkurs (SF1546)** at KTH.  
 The project is implemented in **MATLAB** and models the dynamics of a water tap (vattenkran) using numerical techniques such as:
 
 - Time-stepping algorithms
