@@ -1,50 +1,29 @@
-function lab3a_adv
-    % Parametrar
-    K0 = 11;
-    K1 = 0.2;
 
-    % Initialvillkor
-    y0 = 0.1;
-    s0 = tan(deg2rad(46));  % y'(0)
-    
-    % Intervall
-    xspan = [0 0.5];
+%parametrar
+K0    = 11;
+K1    = 0.2;
+Y0    = [0.1; tan(deg2rad(46))]; %startvillkor [y(0); y'(0)]
+xspan = [0, 0.5]; % x-intervall
 
-    % Avancerad: använd ode45 med två toleransnivåer för metodfel
-    opts1 = odeset('RelTol',1e-13,'AbsTol',1e-14);
-    [~,Y1] = ode45(@(x,Y) ode_system(x,Y,K0,K1), xspan, [y0; s0], opts1);
-    y1 = Y1(end,1);
-    
-    opts2 = odeset('RelTol',1e-15,'AbsTol',1e-16);
-    [~,Y2] = ode45(@(x,Y) ode_system(x,Y,K0,K1), xspan, [y0; s0], opts2);
-    y2 = Y2(end,1);
-    
-    method_err = abs(y2 - y1);
+% solverinställng för metodfel
+opts_work  = odeset('RelTol',1e-12,  'AbsTol',1e-13);
+opts_ref   = odeset('RelTol',1e-14,  'AbsTol',1e-15);
 
-    % Indatafel ±1%
-    params_nom    = [y0, s0, K0, K1];
-    err_inputs    = zeros(1,4);
-    for j = 1:4
-        p = params_nom;
-        p(j) = p(j) * 1.01;
-        [~,Yp] = ode45(@(x,Y) ode_system(x,Y,p(3),p(4)), xspan, [p(1); p(2)], opts1);
-        err_inputs(j) = abs(Yp(end,1) - y2);
-    end
-    input_err = sum(err_inputs);
-    
-    total_err = method_err + input_err;
+%beräkna arbets och referenslösning
+y_work = solve_crane(xspan, Y0, K0, K1, opts_work);
+y_ref  = solve_crane(xspan, Y0, K0, K1, opts_ref);
 
-    % Utskrift
-disp('Avancerad deluppgift a)')
-disp(['  y(0.5)       = ' num2str(y1,        '%.8f') ' m'])
-disp(['  Metodfel     = ' num2str(method_err, '%.2e')  ' m'])
-disp(['  Indatafel ≤=  ' num2str(input_err,  '%.2e')  ' m'])
-disp(['  Total fel ≤=  ' num2str(total_err,  '%.2e')  ' m'])
+%felet
+method_err = abs(y_ref - y_work);
+
+%  funktioner
+function y_end = solve_crane(xspan, Y0, K0, K1, opts)
+    %kör ODE med ode45 och returnera y då x = xspan(end)
+    odeFun = @(x, Y) [Y(2);
+                      -(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2)];
+    [~, Y] = ode45(odeFun, xspan, Y0, opts);
+    y_end  = Y(end,1);
 end
 
-
-function dYdx = ode_system(x, Y, K0, K1)
-    y = Y(1);
-    v = Y(2);
-    dYdx = [v; - (K0 - K1*x) * y * (1 + v^2)^(3/2)];
-end
+disp(['y(0.5)= ' num2str(y_work,'%.8f')])
+disp(['Metodfel= ' num2str(method_err,'%.2e')])
