@@ -1,10 +1,6 @@
 # 🚰 Vattenkran – Final Project in Numerical Methods
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/KTH_Logotyp_RGB_2013.svg/2560px-KTH_Logotyp_RGB_2013.svg.png" alt="KTH Logo" width="200"/>
-</p>
-
-<p align="center">
   <b>Numeriska metoder, grundkurs – SF1546</b><br>
   KTH Royal Institute of Technology<br>
   Spring Term 2025
