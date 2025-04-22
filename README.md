@@ -1,5 +1,8 @@
 # Numerical Methods Final Project
-# Vattenkranen
+
+<p align="center">
+  <b># Vattenkranen</b><br>
+</p>
 
 <p align="center">
   <b>Numeriska metoder, grundkurs – SF1546</b><br>
