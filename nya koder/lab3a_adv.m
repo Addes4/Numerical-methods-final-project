@@ -6,12 +6,12 @@ Y0 = [0.1; tan(deg2rad(46))]; %startvillkor [y(0); y'(0)]
 xspan = [0, 0.5]; % x-intervall
 
 % solverinställng för metodfel
-opts_work = odeset('RelTol',1e-12,  'AbsTol',1e-13);
-opts_ref = odeset('RelTol',1e-14,  'AbsTol',1e-15);
+opts_work = odeset('RelTol',1e-12,  'AbsTol',1e-13); %arbets­­tolerans för beräknningen
+opts_ref = odeset('RelTol',1e-14,  'AbsTol',1e-15);%referens­­tolerans för referens mot första
 
 %beräkna arbets och referenslösning
 y_work = solve_crane(xspan, Y0, K0, K1, opts_work);
-y_ref = solve_crane(xspan, Y0, K0, K1, opts_ref);
+y_ref = solve_crane(xspan, Y0, K0, K1, opts_ref); 
 
 %felet
 method_err = abs(y_ref - y_work);
@@ -19,9 +19,13 @@ method_err = abs(y_ref - y_work);
 %  funktioner
 function y_end = solve_crane(xspan, Y0, K0, K1, opts)
     %kör ODE med ode45 och returnera y då x = xspan(end)
-    odeFun = @(x, Y) [Y(2);
-    -(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2)];
+    odeFun = @(x,Y) [ 
+    Y(2); % y' = v
+    -(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2) % y'' = -K(x)*y*(1+v^2)^(3/2)
+    ];
+    %  lös med ode45:
     [~, Y] = ode45(odeFun, xspan, Y0, opts);
+    %tar ebdast y-kompo i slutpunkten:
     y_end = Y(end,1);
 end
 
