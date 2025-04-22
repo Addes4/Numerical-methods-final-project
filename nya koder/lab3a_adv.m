@@ -26,4 +26,4 @@ function y_end = solve_crane(xspan, Y0, K0, K1, opts)
 end
 
 disp(['y(0.5)= ' num2str(y_work,'%.8f')])
-disp(['Metodfel= ' num2str(method_err,'%.2e')])
+disp(['metodfel= ' num2str(method_err,'%.2e')])
