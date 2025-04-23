@@ -1,0 +1,123 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\title{Numerisk analys av vattenkrans-ODE med RK4}
+\author{Ditt Namn}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Översikt}
+  \tableofcontents
+\end{frame}
+
+\section{Problemformulering}
+\begin{frame}{Bakgrund}
+  \small En vackert böjd guldskimrande vattenkran sitter på ett handfat. Sett från sidan sitter kranen fast i bakkant av handfatet i origo på en liten höjd, $y(0)=0.1$\,m, och startar med lutningen uppåt $46^\circ$ mot horisontalplanet. Därefter kröker kranen vackert enligt
+  \[ y''(x) = -K(x)\,y(x)\bigl(1 + (y'(x))^2\bigr)^{3/2}, \quad K(x)=K_0-K_1 x. \]
+  \vspace{1em}
+  \begin{itemize}
+    \item Mål: Bestäm form $y(x)$ för $x\in[0,0.5]$ samt justera $K_0$ så att $y'(0.5)=-0.51$.
+  \end{itemize}
+\end{frame}
+
+\section{Numerisk metod}
+\begin{frame}{System och RK4}
+  \small Vi studerar alltså kranen beskriven ovan med ODE-parametrar $K_0, K_1$.\
+  \[
+    Y_1=y,\;Y_2=y',\quad
+    Y_1'=Y_2,\;Y_2'=-(K_0-K_1x)Y_1(1+Y_2^2)^{3/2}.
+  \]
+  Klassisk RK4 med global felordning $O(h^4)$ och feluppskattning via steg-halvering.
+\end{frame}
+
+\section{Resultat – Deluppgift a}
+\begin{frame}{Resultat a – Basnivå}
+  \small Återigen betraktas vår guldskimrande kran på $[0,0.5]$.\
+  \begin{itemize}
+    \item $y(0.5)\approx0.2087$\,m
+    \item Numeriskt metodfel $\approx0.0004$\,m
+    \item Indatafel (±1\%) $\le0.0016$\,m
+    \item Total feluppskattning $\approx0.0020$\,m
+  \end{itemize}
+  \textbf{Slutsats:} Indataosäkerhet dominerar – RK4 stabil.
+\end{frame}
+
+\section{Deluppgift b – Basnivå}
+\begin{frame}{RK4 & sekantmetod}
+  \small Vi justerar kranens krökning (parameter $K_0$) för att uppnå önskad utströmningsvinkel.\
+  \begin{itemize}
+    \item Sekantmetod för $K_0$ med mål $y'(0.5)=-0.51$.
+    \item Metodfel via jämförelse h och h/2: $\sim10^{-6}-10^{-7}$.
+  \end{itemize}
+  \textbf{Slutsats:} Snabb konvergens med kursgodkänd noggrannhet.
+\end{frame}
+
+\section{Deluppgift b – Avancerad nivå}
+\begin{frame}{ode45 & fzero}
+  \small Samma problem för kranen, men nu med adaptiv solver i MATLAB.\
+  \begin{itemize}
+    \item \texttt{ode45} med toleransstyrning
+    \item \texttt{fzero} för att hitta $K_0$ med $y'(0.5)=-0.51$
+    \item Fel på mikrometernivå
+  \end{itemize}
+  \textbf{Slutsats:} Automatiserat, mycket hög precision.
+\end{frame}
+
+\section{Deluppgift c}
+\begin{frame}{Beräkning av maxhöjd}
+  \small Kranprofilen från del b) med $K_0=10.675321$.\
+  \begin{itemize}
+    \item RK4 med $h=10^{-3}$ och $h/2$ för felkontroll.
+    \item Maxhöjd = $\max_x y(x)$.
+    \item Metodfel = $|\max y_{h/2}-\max y_h|$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Kodutdrag c()}
+\small
+\begin{lstlisting}[language=Matlab]
+% Sekantmetod för K0
+while abs(K0_curr-K0_prev)>tol_K && iter<maxIter
+  K0_new = K0_curr - f_curr*(K0_curr-K0_prev)/(f_curr-f_prev);
+  ...
+end
+% RK4-profiler
+[~,Yh ] = rk4_system(f,x0,Y0,h, L);
+[~,Yh2] = rk4_system(f,x0,Y0,h/2, L);
+max_yh  = max(Yh(1,:));  max_yh2 = max(Yh2(1,:));
+method_err = abs(max_yh2-max_yh);
+
+disp(['K0=' num2str(K0_solution)])
+disp(['max y_h=' num2str(max_yh)])
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Resultat c()}
+  \small För vår guldskimrande kran:
+  \begin{itemize}
+    \item $K_0=10.675321$
+    \item Maxhöjd $y_h=0.259496$\,m, $y_{h/2}=0.259496$\,m
+    \item Metodfel $4.86\times10^{-13}$
+  \end{itemize}
+  \textbf{Slutsats:} Maxhöjd stabil inom maskinnoggrannhet.
+\end{frame}
+
+\section{Sammanfattning}
+\begin{frame}{Sammanfattning}
+  \small Vår vackra kran har analyserats med RK4, sekant och adaptiva solvers:
+  \begin{itemize}
+    \item ODE omvandlad till första ordningens system.
+    \item RK4 med feluppskattning via steg-halvering.
+    \item Sekantmetod/\texttt{fzero} för parameterjustering.
+    \item Del c: maximal höjd beräknad, metodfel ≈ maskinnoll.
+  \end{itemize}
+\end{frame}
+
+\end{document}
