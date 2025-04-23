@@ -28,7 +28,7 @@ This project showcases the application of numerical methods to simulate real-wor
 <h4>nya koder</h4>
 Consisting of the up-to-date code needed to solve the different problems. All of the general functions needed to run the code are always written in the same file as the problem-specific code which takes unnecessary space and makes the file and code harder to read/interpret.
 
-<h4>functions</h4>
+<h5>functions</h5>
 Necessary map consisting of fundamental functions needed to run the programs stored in "förkortade versioner". Makes the files in "förkortade versioner" to be cleaner.
 
 **förkortade versioner**
