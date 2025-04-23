@@ -1,74 +1,67 @@
-function deluppgift_d_builtin()
-% Basnivå med inbyggda ode45 & fzero, inkl. metodfelsskattning
+% Parametrar
+x0           = 0;
+L            = 0.5;
+y0           = 0.1;
+K1           = 0.2;
+target_slope = -0.51;
+target_height= 0.255;
 
-%% Parametrar och mål
-x0            = 0;                      % Startpunkt x
-L             = 0.5;                    % Slutpunkt x
-y0            = 0.1;                    % Starthöjd y(0)
-K1            = 0.2;                    % Konstant i krökningsfunktion
+% ----- Enradiga hjälpfunktioner -----
+% Hjälpfunktion för att beräkna sluttlutning y'(L)
+get_slope = @(K0,s0) ... % Anonym funktionshandle
+    deval( ...   % Evaluera lösningen vid x = L
+      ode45( ...  % Använd MATLAB:s ode45
+      @(x,Y)[Y(2);... % Definiera ODE: Y(1)=y, Y(2)=y'
+      -(K0-K1*x)*Y(1)*(1+Y(2)^2)^(3/2)], ... 
+             [x0, L], [y0; s0] ), ... % Tidsintervall och startvärden
+      L, 2 ); % Välj komponent 2 = y'(L)
 
-target_slope  = -0.51;                  % Målvärde y'(L)
-target_height = 0.255;                  % Målvärde maxhöjd y
+% Hjälpfunktion för att beräkna maxhöjd y_{max}
+get_height = @(K0,s0) ... % Anonym funktionshandle
+    max( ...  % Hitta största y-värde
+      deval( ...  % Evaluera lösningen på ett finmaskigt nät
+        ode45( @(x,Y)[Y(2); -(K0-K1*x)*Y(1)*(1+Y(2)^2)^(3/2)], ...
+               [x0, L], [y0; s0] ), ...
+        linspace(x0, L, 500), ... % 500 punkter mellan x0 och L
+        1 ) ); %Välj komponent 1 = y(x)
 
-% Toleranser för metodfelsskattning
-optsWork = odeset('RelTol',1e-6,'AbsTol',1e-8);
-optsRef  = odeset('RelTol',1e-9,'AbsTol',1e-10);
+% ----- Rotsökning -----
+% 1) Hitta startlutning s0 så att maxhöjden blir rätt
+find_K0 = @(s0)... % K0 som funktion av s0
+    fzero(...  % Hitta rot för sluttlutningsfelet
+    @(K0) get_slope(K0,s0) - target_slope, 10);
+height_err = @(s0)... % Höjdfel som funktion av s0
+    get_height(find_K0(s0), s0) - target_height;
+s0_sol = fzero(... % Rot för höjdfunktionen
+    height_err, [tan(deg2rad(40)), tan(deg2rad(50))]);
 
-% 1) Arbetslösning
-% a) Hitta s0 så att max y = target_height
-t_funS0 = @(s0) getMaxY(findK0(s0, optsWork, x0, L, y0, K1), s0, optsWork, x0, L, y0, K1) - target_height;
-s0_work  = fzero(t_funS0, tan(deg2rad(46)));
+% 2) Hitta K0 med funnet s0
+K0_sol = find_K0(s0_sol); % K0 som ger rätt sluttlutning
 
-% b) Hitta K0 så att y'(L) = target_slope
-k_funK0 = @(K0) getSlope(K0, s0_work, optsWork, x0, L, y0, K1) - target_slope;
-K0_work  = fzero(k_funK0, 11);
+fprintf('Resultat: s0 = %.4f°  ,  K0 = %.6f\n', rad2deg(s0_sol), K0_sol);
 
-% c) Simulera slutvärden
-dataWork    = simulate(K0_work, s0_work, optsWork, x0, L, y0, K1);
-slope_work  = dataWork.slope;
-max_work    = dataWork.maxY;
+% ----- Beräkning av metodfel -----
+% Två uppsättningar toleranser för ode45
+opts1 = odeset('RelTol',1e-11,  'AbsTol',1e-12);
+opts2 = odeset('RelTol',1e-13, 'AbsTol',1e-14);
 
-% 2) Referenslösning
-r_funS0 = @(s0) getMaxY(findK0(s0, optsRef, x0, L, y0, K1), s0, optsRef, x0, L, y0, K1) - target_height;
-s0_ref  = fzero(r_funS0, s0_work);
-r_funK0 = @(K0) getSlope(K0, s0_ref, optsRef, x0, L, y0, K1) - target_slope;
-K0_ref  = fzero(r_funK0, K0_work);
-dataRef    = simulate(K0_ref, s0_ref, optsRef, x0, L, y0, K1);
-slope_ref  = dataRef.slope;
-max_ref    = dataRef.maxY;
+% Lagra ODE-funktionen
+odeFun = @(x,Y,K0) [Y(2); -(K0-K1*x)*Y(1)*(1+Y(2)^2)^(3/2)];
 
-% 3) Metodfelsskattning
-method_err_slope  = abs(slope_ref - slope_work);
-method_err_height = abs(max_ref   - max_work);
+% 1) Med första toleransen
+sol1 = ode45(@(x,Y) odeFun(x,Y,K0_sol), [x0, L], [y0; tan(s0_sol)], opts1);
+s1   = deval(sol1, L, 2);
+Yv1  = deval(sol1, linspace(x0, L, 500));
+h1   = max(Yv1(1,:));
 
-% 4) Utskrift
-disp('Deluppgift d) med ode45 & fzero')
-disp(['  Startlutning s0    = ' num2str(s0_work,      '%.6f')])
-disp(['  Parameter K0       = ' num2str(K0_work,      '%.6f')])
-disp(['  y''(L) (arb)       = ' num2str(slope_work,   '%.6f')])
-disp(['  max y (arb)        = ' num2str(max_work,     '%.6f') ' m'])
-disp(['  Metodfel y''       = ' num2str(method_err_slope,  '%.2e')])
-disp(['  Metodfel max y     = ' num2str(method_err_height,'%.2e')])
-disp(['  Startlutning s0    = ' num2str(rad2deg(s0_work),      '%.6f')])
+% 2) Med andra (striktare) toleransen
+sol2 = ode45(@(x,Y) odeFun(x,Y,K0_sol), [x0, L], [y0; tan(s0_sol)], opts2);
+s2   = deval(sol2, L, 2);
+Yv2  = deval(sol2, linspace(x0, L, 500));
+h2   = max(Yv2(1,:));
 
-% Lokala funktioner
-    function out = simulate(K0, s0, opts, x0, L, y0, K1)
-        odeFun = @(x, Y) [Y(2); -(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2)];
-        [~, Y]  = ode45(odeFun, [x0 L], [y0; s0], opts);
-        out.slope = Y(end,2);
-        out.maxY  = max(Y(:,1));
-    end
+% Metodfel som skillnad mellan resultaten
+err_slope  = abs(s2 - s1);
+err_height = abs(h2 - h1);
 
-    function v = getSlope(K0, s0, opts, x0, L, y0, K1)
-        v = simulate(K0, s0, opts, x0, L, y0, K1).slope;
-    end
-
-    function v = getMaxY(K0, s0, opts, x0, L, y0, K1)
-        v = simulate(K0, s0, opts, x0, L, y0, K1).maxY;
-    end
-
-    function K0out = findK0(s0, opts, x0, L, y0, K1)
-        funK = @(K0) getSlope(K0, s0, opts, x0, L, y0, K1) - target_slope;
-        K0out = fzero(funK, 11);
-    end
-end
+fprintf('Metodfel: err_slope = %.2e, err_height = %.2e\n', err_slope, err_height);
