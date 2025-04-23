@@ -25,23 +25,19 @@ This project showcases the application of numerical methods to simulate real-wor
 
 <h3 align="center">Repository walk-through</h3>
 
-<h4>nya koder</h4>
+**nya koder**<br>
 Consisting of the up-to-date code needed to solve the different problems. All of the general functions needed to run the code are always written in the same file as the problem-specific code which takes unnecessary space and makes the file and code harder to read/interpret.
 
-
-<h4>functions</h4>
+**functions**<br>
 Necessary map consisting of fundamental functions needed to run the programs stored in "förkortade versioner". Makes the files in "förkortade versioner" to be cleaner.
 
-
-<h4>förkortade versioner</h4>
+**förkortade versioner**<br>
 Pretty much the same code as in "nya koder", but almost all of the functions are imported from the map "functions" instead of being written out every time. Cleaner code which is more readable.
 
-
-<h4>Straight kod</h4>
+**Straight kod**<br>
 Deleted due to outdated code.
 
-
-<h4>LaTex files</h4>
-Code for the lab-report a \\ nd lab-presentation.
+**LaTex files**<br>
+Code for the lab-report and lab-presentation.
 
 ---
