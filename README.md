@@ -26,7 +26,7 @@ This project showcases the application of numerical methods to simulate real-wor
 <h3 align="center">Repository walk-through</h3>
 
 **nya koder**<br>
-Consisting of the up-to-date code needed to solve the different problems. All of the general functions needed to run the code are always written in the same file as the problem-specific code which takes unnecessary space and makes the file and code harder to read/interpret.
+Consisting of the up-to-date code needed to solve the different problems. All of the general functions needed to run the code (such as rk4 and ode systems) are always written in the same file as the problem-specific code which takes unnecessary space and makes the file and code harder to read/interpret.
 
 **functions**<br>
 Necessary map consisting of fundamental functions needed to run the programs stored in "förkortade versioner". Makes the files in "förkortade versioner" to be cleaner.
