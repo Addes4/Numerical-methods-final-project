@@ -15,9 +15,9 @@
 The project is implemented in **MATLAB** and models the dynamics of a water tap (vattenkran) using numerical techniques such as:
 
 - Time-stepping algorithms
-- Nonlinear equation solving
-- Finite difference methods
-- Interpolation and extrapolation
+- Ordinary differential equations solving
+- Secant methods
+- Runge Kutta methods
 
 This project showcases the application of numerical methods to simulate real-world engineering systems.
 
