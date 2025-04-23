@@ -42,6 +42,6 @@ Deleted due to outdated code.
 
 
 <h4>LaTex files</h4>
-Code for the lab-report and lab-presentation.
+Code for the lab-report a\\\\ nd lab-presentation.
 
 ---
