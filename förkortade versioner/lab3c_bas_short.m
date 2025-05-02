@@ -28,7 +28,7 @@ K0_solution = K0_curr; % lös för K0
 
 %beräkna kranprofil och maxhöjd
 % m steglängd h
-f = @(x,Y) crane_ode(x, Y, K0_solution, K1);
+f = @(x,Y) ode_system(x, Y, K0_solution, K1);
 [~, Yh ] = rk4_system(f, x0, Y0, h,    L);
 max_yh  = max(Yh(1,:)); %maxhöjd för h
 
