@@ -1,3 +1,4 @@
+%utan interpolation
 
 %parametrar
 K1 = 0.2; 
