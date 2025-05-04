@@ -21,30 +21,32 @@ function solve_deluppgift3(K0)
     % Hitta index för det största y-vä  rdet
     [~, idx] = max(y_vals);
     
-    % Välj tre punkter kring maximum: en före, vid och efter maximum
-    x1 = x_vals(idx-1); y1 = y_vals(idx-1);
-    x2 = x_vals(idx);   y2 = y_vals(idx);
-    x3 = x_vals(idx+1); y3 = y_vals(idx+1);
+    x1 = x_vals(idx-2); y1 = y_vals(idx-2);
+    x2 = x_vals(idx-1); y2 = y_vals(idx-1);
+    x3 = x_vals(idx);   y3 = y_vals(idx);
+    x4 = x_vals(idx+1); y4 = y_vals(idx+1);
     
-    % Sätt upp systemet för ett andragradspolynom: y = a*x^2 + b*x + c
-    A = [x1^2, x1, 1;
-         x2^2, x2, 1;
-         x3^2, x3, 1];
-    b_vec = [y1; y2; y3];
+    % Andragradsanpassning (befintlig)
+    A_quad = [x2^2, x2, 1;
+              x3^2, x3, 1;
+              x4^2, x4, 1];
+    b_quad = [y2; y3; y4];
+    coeff_quad = A_quad\b_quad;
+    a_q = coeff_quad(1); b_q = coeff_quad(2);
+    x_max_quad = -b_q/(2*a_q);
     
-    % Lös för koefficienterna a, b och c
-    coeff = A\b_vec;
-    a = coeff(1); 
-    b = coeff(2); 
-    c = coeff(3);
-    
-    % Beräkna vertex för polynomet: x_max = -b/(2a)
-    x_max = -b / (2*a);
-    y_max = a*x_max^2 + b*x_max + c;
-    
-    % Skriv ut resultatet
-    fprintf('Interpolerat maximum (deluppgift c):\n');
-    fprintf('  x = %.9f\n', x_max);
-    fprintf('  y = %.6f\n', y_max);
-end
-    
+    % Tredjegradsanpassning
+    A_cubic = [x1^3, x1^2, x1, 1;
+               x2^3, x2^2, x2, 1;
+               x3^3, x3^2, x3, 1;
+               x4^3, x4^2, x4, 1];
+    b_cubic = [y1; y2; y3; y4];
+    coeff_cubic = A_cubic\b_cubic;
+    a_c = coeff_cubic(1); b_c = coeff_cubic(2); c_c = coeff_cubic(3);
+    % Derivata av kubiskt polynom: 3a_c*x² + 2b_c*x + c_c
+    x_max_cubic = roots([3*a_c, 2*b_c, c_c]);
+    x_max_cubic = x_max_cubic(imag(x_max_cubic)==0); % Välj riktigt rot
+
+% Feluppskattning
+error_x = abs(x_max_quad - x_max_cubic);
+fprintf('Feluppskattning: %.3e\n', error_x);
