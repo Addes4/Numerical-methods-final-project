@@ -6,7 +6,7 @@ Y0 = [0.1; tan(deg2rad(46))];
 target_slope = -0.51;
 
 % Steglängd
-h = 1e-4;
+h = 1e-5;
 
 % Sekantmetod – initiala gissningar
 K0_prev = 9;
