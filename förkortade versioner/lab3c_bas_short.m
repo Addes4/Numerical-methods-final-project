@@ -1,14 +1,14 @@
 
 function solve_deluppgift3(K0)
     % Parametrar
-    K0 = 10.675320898642
+    K0 = 10.675320898642;
     K1 = 0.2;
     y0 = 0.1;
     s0 = tan(deg2rad(46));  % y'(0) = tan(46°)
     Y0 = [y0; s0];
     x0 = 0;
     L = 0.5;
-    h = 1e-5;  % Steglängd
+    h = 0.0001;  % Steglängd
     
     % Anonym funktion med inbäddade parametrar
     f = @(x, Y) ode_system(x, Y, K0, K1);
@@ -35,7 +35,7 @@ function solve_deluppgift3(K0)
     coeff_quad = A_quad\b_quad;
     a_q = coeff_quad(1); b_q = coeff_quad(2);
     x_max_quad = -b_q/(2*a_q);
-    
+   
     % Tredjegradsanpassning
     A_cubic = [x1^3, x1^2, x1, 1;
                x2^3, x2^2, x2, 1;
@@ -47,7 +47,14 @@ function solve_deluppgift3(K0)
     % Derivata av kubiskt polynom: 3a_c*x² + 2b_c*x + c_c
     x_max_cubic = roots([3*a_c, 2*b_c, c_c]);
     x_max_cubic = x_max_cubic(imag(x_max_cubic)==0); % Välj riktigt rot
+    % Höjder vid respektive maxposition
+    y_max_quad = polyval(coeff_quad, x_max_quad);
+    y_max_cubic = polyval(coeff_cubic, x_max_cubic);
 
-% Feluppskattning-
-error_x = abs(x_max_quad - x_max_cubic);
-fprintf('Feluppskattning: %.3e\n', error_x);
+    % Felskattningar
+    error_x = abs(x_max_quad - x_max_cubic);
+    error_y = abs(y_max_quad - y_max_cubic);
+
+    % Endast utskrift av höjd och felskattning
+    fprintf('Maxhöjd     = %.8f\n', y_max_quad);
+    fprintf('Felskattning höjd = %.3e\n', error_x);
