@@ -19,10 +19,7 @@ method_err = abs(y_ref - y_work);
 %  funktioner
 function y_end = solve_crane(xspan, Y0, K0, K1, opts)
     %kör ODE med ode45 och returnera y då x = xspan(end)
-    odeFun = @(x,Y) [ 
-    Y(2); % y' = v
-    -(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2) % y'' = -K(x)*y*(1+v^2)^(3/2)
-    ];
+    odeFun = @(x,Y) [Y(2);-(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2)];
     %  lös med ode45:
     [~, Y] = ode45(odeFun, xspan, Y0, opts);
     %tar ebdast y-kompo i slutpunkten:
