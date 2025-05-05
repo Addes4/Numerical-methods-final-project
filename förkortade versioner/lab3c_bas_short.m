@@ -1,41 +1,53 @@
-% parametrar
-K0 = 10.675321;  % från uppgift b
-K1 = 0.2;
-x0 = 0; L = 0.5;
-Y0 = [0.1; tan(deg2rad(46))];
-h  = 1e-5;
 
-% RK4 med h
-f = @(x,Y) ode_system(x,Y,K0,K1);
-[x1,Y1] = rk4_system(f, x0, Y0, h,  L);
+function solve_deluppgift3(K0)
+    % Parametrar
+    K0 = 10.675320898642
+    K1 = 0.2;
+    y0 = 0.1;
+    s0 = tan(deg2rad(46));  % y'(0) = tan(46°)
+    Y0 = [y0; s0];
+    x0 = 0;
+    L = 0.5;
+    h = 0.00001;  % Steglängd
+    
+    % Anonym funktion med inbäddade parametrar
+    f = @(x, Y) ode_system(x, Y, K0, K1);
+    
+    % Lös systemet med RK4
+    [x_vals, Y] = rk4_system(f, x0, Y0, h, L);
+    
+    % Extrahera y-lösningarna
+    y_vals = Y(1, :);
+    
+    % Hitta index för det största y-vä  rdet
+    [~, idx] = max(y_vals);
+    
+    x1 = x_vals(idx-2); y1 = y_vals(idx-2);
+    x2 = x_vals(idx-1); y2 = y_vals(idx-1);
+    x3 = x_vals(idx);   y3 = y_vals(idx);
+    x4 = x_vals(idx+1); y4 = y_vals(idx+1);
+    
+    % Andragradsanpassning (befintlig)
+    A_quad = [x2^2, x2, 1;
+              x3^2, x3, 1;
+              x4^2, x4, 1];
+    b_quad = [y2; y3; y4];
+    coeff_quad = A_quad\b_quad;
+    a_q = coeff_quad(1); b_q = coeff_quad(2);
+    x_max_quad = -b_q/(2*a_q);
+    
+    % Tredjegradsanpassning
+    A_cubic = [x1^3, x1^2, x1, 1;
+               x2^3, x2^2, x2, 1;
+               x3^3, x3^2, x3, 1;
+               x4^3, x4^2, x4, 1];
+    b_cubic = [y1; y2; y3; y4];
+    coeff_cubic = A_cubic\b_cubic;
+    a_c = coeff_cubic(1); b_c = coeff_cubic(2); c_c = coeff_cubic(3);
+    % Derivata av kubiskt polynom: 3a_c*x² + 2b_c*x + c_c
+    x_max_cubic = roots([3*a_c, 2*b_c, c_c]);
+    x_max_cubic = x_max_cubic(imag(x_max_cubic)==0); % Välj riktigt rot
 
-% RK4 med h/2
-[x2,Y2] = rk4_system(f, x0, Y0, h/2, L);
-
-
-function [x_max,y_max] = quadratic_interp(x,y,idx)
-    n = numel(x);
-    if idx>1 && idx<n
-        xm = x(idx-1:idx+1).';    % kolumnvektor
-        ym = y(idx-1:idx+1).';    % kolumnvektor
-        A  = [xm.^2, xm, ones(3,1)];
-        c  = A \ ym;              % [a; b; c]
-        x_max = -c(2)/(2*c(1));   % vertex
-        y_max = c(1)*x_max^2 + c(2)*x_max + c(3);
-    else
-        x_max = x(idx);
-        y_max = y(idx);
-    end
-end
-
-% hitta och interpolera max
-[~,i1] = max(Y1(1,:));
-[~,y1] = quadratic_interp(x1, Y1(1,:), i1);
-[~,i2] = max(Y2(1,:));
-[~,y2] = quadratic_interp(x2, Y2(1,:), i2);
-
-% metodfel
-err = abs(y2 - y1);
-
-fprintf('Maxhöjd   = %.6f\n', y1);
-fprintf('Metodfel  = %.2e\n', err);
+% Feluppskattning-
+error_x = abs(x_max_quad - x_max_cubic);
+fprintf('Feluppskattning: %.3e\n', error_x);
