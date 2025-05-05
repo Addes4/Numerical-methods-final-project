@@ -31,19 +31,19 @@ end
 
 K0_solution = K0_curr;  % Lösning för K0
 
-% medtodfel med halverad steglängd
-y_work = compute_end_slope(K0_solution, x0, Y0, h,    L, K1);
-y_ref  = compute_end_slope(K0_solution, x0, Y0, h/2,  L, K1);
-method_err = abs(y_ref - y_work);
-
-fprintf('Löst K0          = %.6f\n', K0_solution);
-fprintf('Antal iterationer= %d\n', iter);
-fprintf('y''(L) med h     = %.6f\n', y_work);
-fprintf('y''(L) med h/2   = %.6f\n', y_ref);
-fprintf('Metodfel        = %.2e\n', method_err);
-
 function s_end = compute_end_slope(K0, x0, Y0, h, L, K1)
     f = @(x,Y) ode_system(x, Y, K0, K1);
     [~, Y] = rk4_system(f, x0, Y0, h, L);
     s_end = Y(2,end);
 end
+
+% medtodfel med halverad steglängd
+y_work = compute_end_slope(K0_solution, x0, Y0, h,    L, K1);
+y_ref  = compute_end_slope(K0_solution, x0, Y0, h/2,  L, K1);
+method_err = abs(y_ref - y_work);
+
+fprintf('K0  = %.6f\n', K0_solution);
+fprintf('antal iterationer= %d\n', iter);
+fprintf('y''(L) med h = %.6f\n', y_work);
+fprintf('y''(L) med h/2 = %.6f\n', y_ref);
+fprintf('metodfel = %.2e\n', method_err);
