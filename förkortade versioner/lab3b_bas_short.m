@@ -4,7 +4,7 @@ K1 = 0.2;
 Y0 = [0.1; tan(deg2rad(46))]; % [y(0); y'(0)]
 x0  = 0;
 L = 0.5; % slutp x
-h = 1e-5;
+h = 1e-4;
 target_slope = -0.51;
 
 %sekantmetod för att hitta K0
@@ -38,7 +38,7 @@ function s_end = compute_end_slope(K0, x0, Y0, h, L, K1)
 end
 
 % medtodfel med halverad steglängd
-y_work = compute_end_slope(K0_solution, x0, Y0, h,    L, K1);
+y_work = compute_end_slope(K0_solution, x0, Y0, h, L, K1);
 y_ref = compute_end_slope(K0_solution, x0, Y0, h/2,  L, K1);
 method_err = abs(y_ref - y_work);
 
