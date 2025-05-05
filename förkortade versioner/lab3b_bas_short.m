@@ -4,7 +4,7 @@ K1 = 0.2;
 Y0 = [0.1; tan(deg2rad(46))]; % [y(0); y'(0)]
 x0  = 0;
 L = 0.5; % slutp x
-h = 1e-3;
+h = 1e-5;
 target_slope = -0.51;
 
 %sekantmetod för att hitta K0
