@@ -21,7 +21,7 @@ while abs(K0_curr - K0_prev) > tol_K && iter < maxIter
     K0_prev = K0_curr;  f_prev = f_curr;
     K0_curr = K0_new;
     f_curr  = compute_slope(K0_curr, x0, Y0, h, L, K1) - target_slope;
-    iter    = iter + 1;
+    iter = iter + 1;
 end
 K0_solution = K0_curr; % lösning K0
 
@@ -54,9 +54,9 @@ function slope_end = compute_slope(K0, x0, Y0, h, L, K1)
 end
 
 %  steglängd h/2 för feluppskattning
-h2        = h/2;
+h2 = h/2;
 [~, Yh2 ] = rk4_system(f, x0, Y0, h2,   L);
-max_yh2   = max(Yh2(1,:));
+max_yh2 = max(Yh2(1,:));
 
 method_err = abs(max_yh2 - max_yh);
 
