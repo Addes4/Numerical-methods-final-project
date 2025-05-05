@@ -1,10 +1,10 @@
 
 % parameter och startv
-K1           = 0.2;
-Y0           = [0.1; tan(deg2rad(46))]; % [y(0); y'(0)]
-x0           = 0;
-L            = 0.5; % slutp x
-h            = 1e-3;
+K1 = 0.2;
+Y0 = [0.1; tan(deg2rad(46))]; % [y(0); y'(0)]
+x0  = 0;
+L = 0.5; % slutp x
+h = 1e-3;
 target_slope = -0.51;
 
 %sekantmetod för att hitta K0
@@ -15,17 +15,17 @@ K0_curr = 15; % gissning 2
 f_prev = compute_end_slope(K0_prev, x0, Y0, h, L, K1) - target_slope;
 f_curr = compute_end_slope(K0_curr, x0, Y0, h, L, K1) - target_slope;
 
-tol_K   = 1e-5;
+tol_K = 1e-5;
 maxIter = 50;
-iter    = 0;
+iter = 0;
 
 while abs(K0_curr - K0_prev) > tol_K && iter < maxIter
     % sekant uppd
     K0_new = K0_curr - f_curr*(K0_curr - K0_prev)/(f_curr - f_prev);
     K0_prev = K0_curr;
-    f_prev  = f_curr;
+    f_prev = f_curr;
     K0_curr = K0_new;
-    f_curr  = compute_end_slope(K0_curr, x0, Y0, h, L, K1) - target_slope;
+    f_curr = compute_end_slope(K0_curr, x0, Y0, h, L, K1) - target_slope;
     iter = iter + 1;
 end
 
@@ -39,7 +39,7 @@ end
 
 % medtodfel med halverad steglängd
 y_work = compute_end_slope(K0_solution, x0, Y0, h,    L, K1);
-y_ref  = compute_end_slope(K0_solution, x0, Y0, h/2,  L, K1);
+y_ref = compute_end_slope(K0_solution, x0, Y0, h/2,  L, K1);
 method_err = abs(y_ref - y_work);
 
 fprintf('K0  = %.6f\n', K0_solution);
