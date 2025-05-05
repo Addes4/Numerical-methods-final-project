@@ -8,7 +8,7 @@ function solve_deluppgift3(K0)
     Y0 = [y0; s0];
     x0 = 0;
     L = 0.5;
-    h = 0.00001;  % Steglängd
+    h = 1e-5;  % Steglängd
     
     % Anonym funktion med inbäddade parametrar
     f = @(x, Y) ode_system(x, Y, K0, K1);
