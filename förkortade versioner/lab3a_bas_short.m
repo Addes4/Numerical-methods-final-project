@@ -34,5 +34,5 @@ p_est = log(E1/E2) / log(2);
 
 % Utskrifter
 disp(['y(0.5)        = ' num2str(yh2, '%.8f')])
-disp(['Metodfel      = ' num2str(E2,  '%.2e')])
+disp(['Metodfel      = ' num2str(E1,  '%.2e')])
 disp(['Uppskattad p  = ' num2str(p_est, '%.4f')])
