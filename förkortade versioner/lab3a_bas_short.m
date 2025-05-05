@@ -7,8 +7,8 @@ Y0 = [y0; s0];
 
 %steglängder o intervall
 x0 = 0;
-L  = 0.5;
-h  = 1e-4;  % steg
+L = 0.5;
+h = 1e-4;  % steg
 h2 = h/2;   % halvasteg
 
 % använd den generiska ode_system-funktionen istället för crane_ode
@@ -16,10 +16,10 @@ f = @(x,Y) ode_system(x, Y, K0, K1);
 
 % kör RK4 för h med extern rk4_system
 [~, Yh ]  = rk4_system(f, x0, Y0, h,  L);
-yh  = Yh(1,end);
+yh = Yh(1,end);
 
 % kör RK4 för h/2
-[~, Yh2]  = rk4_system(f, x0, Y0, h2, L);
+[~, Yh2] = rk4_system(f, x0, Y0, h2, L);
 yh2 = Yh2(1,end);
 
 % metodfel via två steglängder
