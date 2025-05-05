@@ -8,7 +8,7 @@ Y0 = [y0; s0];
 %steglängder o intervall
 x0 = 0;
 L = 0.5;
-h = 1e-4;  % steg
+h = 1e-5;  % steg
 h2 = h/2;   % halvasteg
 
 % använd den generiska ode_system-funktionen istället för crane_ode
