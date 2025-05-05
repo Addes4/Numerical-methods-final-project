@@ -10,7 +10,7 @@ target_slope = -0.51;  % mål slutlutning
 opts_work = odeset('RelTol',1e-12, 'AbsTol',1e-13);
 opts_ref = odeset('RelTol',1e-14, 'AbsTol',1e-15);
 
-%  funktionshandtag för att beräkna slutlutning
+%  funktionshandle för att beräkna slutlutning
 slope_work = @(K0) compute_slope(K0, xspan, Y0, K1, opts_work);
 slope_ref  = @(K0) compute_slope(K0, xspan, Y0, K1, opts_ref);
 
@@ -28,10 +28,7 @@ method_err = abs(yr - yw);
 
 function slope_end = compute_slope(K0, xspan, Y0, K1, opts)
     %kör ODE och returnerar y'(xspan(end))
-    odeFun = @(x, Y) [
-        Y(2);
-        -(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2)
-        ];
+    odeFun = @(x, Y) [Y(2);-(K0 - K1*x)*Y(1)*(1 + Y(2)^2)^(3/2)];
     [~, Y] = ode45(odeFun, xspan, Y0, opts);
     slope_end = Y(end,2);
 end
