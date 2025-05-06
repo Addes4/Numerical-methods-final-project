@@ -26,8 +26,8 @@ K0_sol = find_K0(s0_sol); % K0 som ger rätt sluttlutning
 fprintf('Resultat: s0 = %.4f°  ,  K0 = %.6f\n', rad2deg(s0_sol), K0_sol);
 
 % 2 toleranser för ode45
-opts1 = odeset('RelTol',1e-11,  'AbsTol',1e-12);
-opts2 = odeset('RelTol',1e-13, 'AbsTol',1e-14);
+opts1 = odeset('RelTol',1e-10,  'AbsTol',1e-11);
+opts2 = odeset('RelTol',1e-12, 'AbsTol',1e-13);
 
 % spara ODE-funktionen
 odeFun = @(x,Y,K0) [Y(2); -(K0-K1*x)*Y(1)*(1+Y(2)^2)^(3/2)];
