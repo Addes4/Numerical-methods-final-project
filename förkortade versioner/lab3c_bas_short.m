@@ -6,7 +6,7 @@ s0 = tan(deg2rad(46));
 Y0 = [y0; s0];
 x0 = 0;
 L = 0.5;
-h = 1e-5;
+h = 1e-3;
 
 % ode-system som anonym funktion
 f = @(x, Y) ode_system(x, Y, K0, K1);
