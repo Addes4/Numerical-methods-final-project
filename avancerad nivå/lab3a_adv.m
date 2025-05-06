@@ -6,8 +6,8 @@ Y0 = [0.1; tan(deg2rad(46))]; %startvillkor [y(0); y'(0)]
 xspan = [0, 0.5]; % x-intervall
 
 % solverinställng för metodfel
-opts_work = odeset('RelTol',1e-12,  'AbsTol',1e-13); %arbets­­tolerans för beräknningen
-opts_ref = odeset('RelTol',1e-14,  'AbsTol',1e-15);%referens­­tolerans för referens mot första
+opts_work = odeset('RelTol',1e-10,  'AbsTol',1e-11); %arbets­­tolerans för beräknningen
+opts_ref = odeset('RelTol',1e-12,  'AbsTol',1e-13);%referens­­tolerans för referens mot första
 
 %beräkna arbets och referenslösning
 y_work = solve_crane(xspan, Y0, K0, K1, opts_work);
