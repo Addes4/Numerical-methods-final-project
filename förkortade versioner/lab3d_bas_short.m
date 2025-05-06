@@ -4,14 +4,14 @@ x0 = 0;
 L = 0.5;
 Y0 = [0.1; tan(deg2rad(46))]; % [y(0); y'(0)]
 K1  = 0.2;
-h = 1e-5;
+h = 1e-3;
 
 target_slope  = -0.51;
 target_height = 0.255;
 
-tol_s0 = 1e-5;
+tol_s0 = 1e-3;
 maxIter_s0 = 50;
-tol_K0 = 1e-5;
+tol_K0 = 1e-3;
 maxIter_K0 = 50;
 
 % yttre sekant
@@ -49,9 +49,9 @@ K0_solution = find_K0_for_s0(s0_solution, target_slope, x0, Y0, h, L, K1);
 err_slope  = abs(slope_h2  - slope_h);
 err_height = abs(height_h2 - height_h);
 
-fprintf('startlutning s0   = %.6f rad (%.4f grader)\n', s0_solution, rad2deg(s0_solution));
+fprintf('startlutning s0 = %.6f rad (%.4f grader)\n', s0_solution, rad2deg(s0_solution));
 fprintf('parameter K0 = %.6f\n', K0_solution);
 fprintf('slutlutning y'' = %.6f\n', slope_h);
-fprintf('maxhöjd y_max   = %.6f m\n', height_h);
+fprintf('maxhöjd y_max = %.6f m\n', height_h);
 fprintf('metodfel lutning = %.2e\n', err_slope);
-fprintf('metodfel höjd    = %.2e\n', err_height);
+fprintf('metodfel höjd = %.2e\n', err_height);
