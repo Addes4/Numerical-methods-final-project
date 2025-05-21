@@ -32,13 +32,13 @@ Consists of the codefiles for advanced level. These utilize MATLAB:s embedded fu
 Extra files for different extra calculations.
 
 **functions**<br>
-Necessary map consisting of fundamental functions needed to run the programs stored in "förkortade versioner". Makes the code in "förkortade versioner" cleaner.
+Necessary map consisting of fundamental functions needed to run the programs stored in "förkortade versioner". Makes the code in "förkortade versioner" cleaner. These are self-built.
 
 **förkortade versioner**<br>
-These codefiles solve the problems using our own built functions from the map "functions". The neccessary functions are imported instead of being written out every time. Clean code which is readable.
+These codefiles are programmed to solve the different problems given in the assignment, we do this by utilizing our self-built functions from the map "functions". The neccessary functions are imported instead of being written out every time. Clean code which is readable.
 
 **LaTex files**<br>
-Code for the lab-report and lab-presentation.
+Code for the lab-report and lab-presentation. These are not complete.  
 https://www.overleaf.com/read/byvjdhmfxkfm#04e042
 
 
