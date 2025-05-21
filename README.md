@@ -23,7 +23,7 @@ This project showcases the application of numerical methods to simulate real-wor
 
 ---
 
-<h3 align="center">Repository walk-through</h3>
+<h3 align="center">Repository contents</h3>
 
 **avancerad nivå**<br>
 Consists of the codefiles for advanced level. These utilize MATLAB:s embedded functions such as ODE45 and fzero.
