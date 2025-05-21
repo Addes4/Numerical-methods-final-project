@@ -36,5 +36,3 @@ Necessary map consisting of fundamental functions needed to run the programs sto
 
 **förkortade versioner**<br>
 These codefiles are programmed to solve the different problems given in the assignment, we do this by utilizing our self-built functions from the map "functions". The neccessary functions are imported instead of being written out every time. Clean code which is readable.  
-
----
